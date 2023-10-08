@@ -4,5 +4,21 @@
 	<title>p-wikiracer</title>
 </head>
 <body>
-    <p>Welcome to p-wikiracer!</p>
+    <h1>Welcome to p-wikiracer!</h1>
+    <p>Hi racers!</p>
+
+    <form method="POST" action="/set-start">
+        <input type="text" name="start_input" placeholder="Enter start">
+        <input type="submit" value="Submit Start">
+    </form>
+
+    <form method="POST" action="/set-end">
+        <input type="text" name="end_input" placeholder="Enter end">
+        <input type="submit" value="Submit End">
+    </form>
+
+    <p>{{ start }} to {{ end }}</p>
+    
+    <p>Shortest Path: {{ path }}</p>
+    
 </body>

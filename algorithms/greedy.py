@@ -13,3 +13,5 @@ class Greedy(WikiRacer):
         """
         super().__init__(max_path_length)
         self.doc_sim = doc_sim_func
+
+
