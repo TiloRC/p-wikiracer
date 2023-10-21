@@ -1,13 +1,26 @@
 
+<!DOCTYPE html>
+<html>
 <head>
-    <link rel="stylesheet" href={{ url_for('static', filename='stylesheets/style.css') }}/>
+    <link rel="stylesheet" href="/static/stylesheets/style.css" type="text/css">
 	<title>p-wikiracer</title>
 </head>
 <body>
     <p>Welcome to p-wikiracer!</p>
-    <p>Hi i'm emily</p>
-    <p>Hi i'm emily again</p>
-    <p>Hi i'm emily again again</p>
-    <p>Hi i'm emily again again again</p>
+    <div class="flex-searchbox">
+    <div>
+        <p>Start Page</p>
+        <form action="/url">
+            <input type="text">
+        </form>
+    </div>
 
+    <div>
+        <p>End Page</p>
+        <form action="/url">
+            <input type="text">
+        </form>
+    </div>
+    </div>
 </body>
+</html>

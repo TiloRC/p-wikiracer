@@ -3,3 +3,10 @@ body {
 	background-color: lightblue;
     margin: 0;
 }
+
+.flex-searchbox {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-evenly;
+	align-items: center;
+}
