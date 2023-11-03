@@ -6,7 +6,8 @@ body {
 
 h1 {
 	font-family: "Press Start 2P";
-	color: #726145;
+	/* color: #726145; */
+	color: green;
 	text-align: center;
 	margin-top: 75px;
 	margin-bottom: 50px;
