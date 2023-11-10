@@ -87,30 +87,66 @@ input {
 	font-family:'Press Start 2P';
 }
 
-.dot {
-	height: 1px;
-	width: 1px;
-	background-color: C3DBF5;
-	border-radius: 50%;
-	display: inline-block;
-	transform: translateX(-100%);
-	animation-name: chug;
-	animation-duration: 4s;
-	animation-iteration-count: infinite;
+.red {
+    border-radius: 50%;
+    display: inline-block;
+    bottom: 160px;
+    animation-delay: -5s;
+    transform: translateX(-100%);
+    animation-name: moveAcross;
+    animation-duration: 10s;
+    animation-iteration-count: infinite;
 }
 
-@keyframes chug {
+.blue {
+    border-radius: 50%;
+    display: inline-block;
+    bottom: 100px;
+    animation-delay: -10s;
+    transform: translateX(-100%);
+    animation-name: moveAcross;
+    animation-duration: 11s;
+    animation-iteration-count: infinite;
+}
+
+.green {
+    border-radius: 50%;
+    display: inline-block;
+    bottom: 40px;
+    animation-delay: -4s;
+    transform: translateX(-100%);
+    animation-name: moveAcross;
+    animation-duration: 10s;
+    animation-iteration-count: infinite;
+}
+
+.rcar {
+    position: absolute;
+    left: 15%;
+}
+
+.bcar {
+    position: absolute;
+    left: -5%;
+}
+
+.gcar {
+    position: absolute;
+    left: -25%;
+}
+
+@keyframes moveAcross {
 	0% {
-		transform: translateX(-100%);
+	  transform: translateX(-50vw);
 	}
-	33% {
+	60% {
 		transform: translateX(50vw);
 	}
-	66% {
+	40% {
 		transform: translateX(50vw);
 	}
 	100% {
-		transform: translateX(100vw);
+		transform: translateX(125vw);
 	}
-}
+  }
 

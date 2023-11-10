@@ -3,7 +3,8 @@
 </style> 
 
 <head>
-    <link rel="stylesheet" href={{ url_for('static', filename='stylesheets/style.css') }}/>
+    <!-- <link rel="stylesheet" href={{ url_for('static', filename='stylesheets/style.css') }}/> -->
+    <link rel="stylesheet" href="/static/stylesheets/style.css" type="text/css">
 	<title>p-wikiracer</title>
 </head>
 
@@ -32,7 +33,9 @@
                 <input class="btn" type="submit" value="submit">
             </div>
 
-            <a href="{{ url_for('static', filename='/car.png') }}" class="dot"><img src="/static/car.png"></a>
+            <a href="{{ url_for('static', filename='/car.png') }}" class="red rcar"><img src="/static/rightcar.png"></a>
+            <a href="{{ url_for('static', filename='/car.png') }}" class="blue bcar"><img src="/static/bluecar.png"></a>
+            <a href="{{ url_for('static', filename='/car.png') }}" class="green gcar"><img src="/static/greencar.png"></a>
 
         </form>
 </body>
