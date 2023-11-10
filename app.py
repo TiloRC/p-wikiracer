@@ -1,21 +1,23 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 import wikipedia
 app = Flask(__name__)
-
-@app.route("/", methods=['GET', 'POST'])
-def send():
-    if request.method == 'POST':
-        start = request.form['start']
-        end = request.form['end']
-        if (start != "") and (end == ""):
-            search_list = get_searches(start, 5)
-            # (item0, item1, item2, item3, item4) = convert_to_dropdown(search_list)
-            r_template = convert_to_dropdown(search_list) #render_template('home.html', rslt_l_0=item0, rslt_l_1=item1, rslt_l_2=item2, rslt_l_3=item3, rslt_l_4=item4)
-            return r_template
-        if (start != "") and (end != ""):
-            path_val = path(start, end)
-            return render_template('output.html',path_val=path_val)
-    return render_template('home.html')
+# <int:my_num>
+@app.route("/backend-api", methods=['GET'])
+def get_data():
+    # if request.method == 'POST':
+    #     start = request.form['start']
+    #     end = request.form['end']
+    #     if (start != "") and (end == ""):
+    #         search_list = get_searches(start, 5)
+    #         # (item0, item1, item2, item3, item4) = convert_to_dropdown(search_list)
+    #         r_template = convert_to_dropdown(search_list) #render_template('home.html', rslt_l_0=item0, rslt_l_1=item1, rslt_l_2=item2, rslt_l_3=item3, rslt_l_4=item4)
+    #         return r_template
+    #     if (start != "") and (end != ""):
+    #         path_val = path(start, end)
+    #         return render_template('output.html',path_val=path_val)
+    print("hello from flask")
+    # my_num = 4
+    return jsonify({"number": "4", "hi":"hello"})
 
 
 # will replace by importing backend function 
