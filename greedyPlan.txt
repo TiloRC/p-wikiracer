@@ -28,3 +28,5 @@
         - gen represents the avg of freq 
         - freq thru zipf's law (frequency is approximately the inverse of the world rank)
         - average for each word in the title
+        - also try using the min freq instead of avg
+        - if not in wordranking, freq is 0

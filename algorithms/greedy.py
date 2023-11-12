@@ -118,6 +118,27 @@ class Greedy():
             wiki_page = self.wiki_access.page(sorted_links[0])
             
         return sorted_links[0]
+    
+
+    def get_blended_sim(self, links, target_page):
+        """
+        returns the page with the highest blended similarity value to the target page. 
+        blended_sim = (1-α)cos_sim ** beta  + αgen
+        gen = Avg(1/word_rank)
+        """
+
+        file_in = open("wordrankings.txt", "r")
+        encoded_target = self.model.encode(target_page)
+
+        word_list = file_in.readlines()
+        print(type(word_list))
+        # beta is an exponent on Sim (beta is 1 or 2)
+        # need to get cos sim
+        # need to get rank from text file
+            # create a counter 
+
+        # need to blend them using some alpha, will play around
+
 
 
 if __name__ == "__main__":
