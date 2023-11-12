@@ -21,7 +21,10 @@
     - Step 2: Determine what the solution will include (e.g., largest sum, shortest path).
     - Step 3: Create an iterative process for going over all subproblems and creating an optimum solution.
 
-4) To-do
-    - Change names for better names [DONE]
-    - update visited in getlinkedlists [DONE]
-        - would decrease the number of cos sim we'd have to run
+4) To-do    
+    - using how common a word is
+    - balancing it w/ the cos sim 
+    - (1-alpha)sim + (alpha)gen 
+        - gen represents the avg of freq 
+        - freq thru zipf's law (frequency is approximately the inverse of the world rank)
+        - average for each word in the title
