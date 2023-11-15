@@ -1,0 +1,150 @@
+body {
+	font-family: "IBM Plex Sans", sans-serif;
+	background-color: C3DBF5;
+    margin: 0;
+}
+
+h1 {
+	font-family: "Press Start 2P";
+	color: #726145;
+	text-align: center;
+	margin-top: 75px;
+	margin-bottom: 50px;
+}
+
+h2 {
+	font-family: "Press Start 2P";
+	color: #726145;
+	text-align: center;
+	margin-top: 25px;
+	margin-bottom: 50px;
+}
+
+.headers {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.start-header {
+	margin-right: 300px;
+}
+
+.rectangle {
+	background-color: #F2D5D5; /* Green */
+	border: solid;
+	border-width: thin;
+	border-radius: 10px;
+	color: #726145;
+	padding: 10px 20px;
+	width: 100px;
+	text-align: center;
+	text-decoration: none;
+	font-size: 14px;
+	font-family:'Press Start 2P';
+	position: relative;
+	margin-bottom: 50px;
+	margin-top: 50px;
+}
+
+.form-group {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+input {
+	padding: 10px 32px;
+	font-size: 14px;
+	font-family:'Press Start 2P';
+	text-align: center;
+}
+
+.start-field {
+	margin-right: 100px;
+}
+
+.submit-button {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 50px;
+	margin-top: 20px;
+}
+
+.btn {
+	background-color: #F2D5D5; /* Green */
+	border: solid;
+	border-width: thin;
+	border-radius: 10px;
+	color: #726145;
+	padding: 15px 32px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 16px;
+	position: relative;
+	font-family:'Press Start 2P';
+}
+
+.dot {
+	height: 1px;
+	width: 1px;
+	background-color: C3DBF5;
+	border-radius: 50%;
+	display: inline-block;
+	transform: translateX(-100%);
+	animation-name: chug;
+	animation-duration: 4s;
+	animation-iteration-count: infinite;
+}
+
+@keyframes chug {
+	0% {
+		transform: translateX(-100%);
+	}
+	33% {
+		transform: translateX(50vw);
+	}
+	66% {
+		transform: translateX(50vw);
+	}
+	100% {
+		transform: translateX(100vw);
+	}
+}
+
+.grid-container {
+	display: flex;
+	flex-direction: row;
+	align-items: flex-start;
+	gap: 1px;
+	height: 600px;
+}
+
+.result-container {
+	flex: 1;
+	border: 3px solid black;
+	margin-left: 50px;
+	width: 50%;
+	display: block;
+}
+
+.result-list {
+	display: block;
+	margin: 0 auto;
+}
+
+.embed-web { 
+	width: 85%;
+	height: 100%;
+	display: block;
+}
+
+iframe {
+	width: 85%;
+	height: 100%;
+	display: block;
+	margin-left: 50px;
+	margin-bottom: 30px;
+}
