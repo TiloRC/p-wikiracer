@@ -45,6 +45,7 @@ class Greedy():
 
         if (wiki_start.exists() and wiki_dest.exists()):
             visited = [start_page] # list of visisted pages
+            print(visited)
             count = 0 # # page visit count
             current_wiki = wiki_start # tracks current wiki page
 
@@ -57,9 +58,10 @@ class Greedy():
                 links = self.get_linked_pages(current_wiki, visited)
 
                 # get link with highest cos sim and 'visit'
-                most_sim_page = self.get_most_similar(links, dest_page)
+                most_sim_page = self.get_blended_sim(links, dest_page)
                 visited.append(most_sim_page)
-
+                print(visited)
+                
                 # path completed
                 if most_sim_page == dest_page:
                     return visited
@@ -126,24 +128,59 @@ class Greedy():
         blended_sim = (1-α)cos_sim ** beta  + αgen
         gen = Avg(1/word_rank)
         """
-
+        #  open file and encode target
         file_in = open("wordrankings.txt", "r")
         encoded_target = self.model.encode(target_page)
 
-        word_list = file_in.readlines()
-        print(type(word_list))
-        # beta is an exponent on Sim (beta is 1 or 2)
-        # need to get cos sim
-        # need to get rank from text file
-            # create a counter 
+        # list of lines in (-1 + rank) asc. order
+        ranked_lines = file_in.readlines()
 
-        # need to blend them using some alpha, will play around
+        # stripping \n
+        ranked_lines = [line.rstrip("\n") for line in ranked_lines]
+
+        link_freqs = [] # list of tuples (link, avg freq)
+        for link in links:  
+            # list of a freq's for each token in a link title
+            freqs = [(1/(1 + ranked_lines.index(token)) if token in ranked_lines else 0) for token in link.split()]
+            link_freqs.append((link, sum(freqs)/len(freqs)))
+
+
+        # freq scaling factor
+        alpha = 0.5
+
+        # sort by highest blended
+        blend_sorted = sorted(link_freqs,key = lambda tple: (1 - alpha) * (util.cos_sim(self.model.encode(tple[0]), encoded_target)[0][0].item()) + alpha * tple[1], reverse=True)
+        
+
+        # removing blended
+        sorted_links = [tple[0] for tple in blend_sorted]
+
+        if not sorted_links:
+            raise PathDeadend
+        
+        wiki_page = self.wiki_access.page(sorted_links[0])
+
+    
+        while not wiki_page.exists(): 
+            # checking to see if list exists
+            if not sorted_links:
+                raise PathDeadend
+            
+            # pop out pages that don't exist
+            sorted_links.pop(0)
+            wiki_page = self.wiki_access.page(sorted_links[0])
+            
+        if target_page in sorted_links:
+            return target_page
+        else:
+            return sorted_links[0]
 
 
 
 if __name__ == "__main__":
     tester_1 = Greedy()
-    print(tester_1.find_path("Pomona College", "Albert Einstein"))
+    print(tester_1.find_path("KIPP Texas Public Schools", "Colorado River"))
+    print("finished")
 
 
 
