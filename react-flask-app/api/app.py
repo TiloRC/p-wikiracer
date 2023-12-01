@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 import time
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 import wikipediaapi
 import wikipedia
 
@@ -16,12 +16,13 @@ def send():
     return render_template('home.html')
 
 @app.route('/api')
+@cross_origin()
 def api():
     
     searchTerm = request.args.get("textInput")
 
     response = {'searchResult': get_searches(searchTerm,5)}
-    
+
     return jsonify(response)
 
 

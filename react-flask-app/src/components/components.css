@@ -29,6 +29,9 @@ h2 {
 .start-header {
 	margin-right: 300px;
 }
+.input-separator {
+	margin-right: 150px;
+}
 
 .rectangle {
 	background-color: #F2D5D5; /* Green */

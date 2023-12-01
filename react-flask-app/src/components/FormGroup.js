@@ -34,18 +34,13 @@ function FormGroup() {
   return  (
     <div>
       
-
-    <div class="form-group">
+    <div class="headers">
       <AsyncAutocomplete title="Start Page" setValue={setStartVal}/>
+      <div class="input-separator"></div>
       <AsyncAutocomplete title="End Page" setValue={setEndVal}/>
-          {/* <div class="start-field">
-              <input type="text" name = "start" onChange={(e) => setInputText(e.target.value)}/>
-          </div>
-          <div class="end-field">
-            <input type="text" name = "end" onChange={(e) => setOutputText(e.target.value)}/>
-          </div> */}
-      </div>
-      <div class = "submit-button">
+    </div>
+
+    <div class = "submit-button">
         <input class="btn" type="submit" value="submit" onClick={() => handleClick(startVal, endVal)}/>
         <div>
           {startVal}
