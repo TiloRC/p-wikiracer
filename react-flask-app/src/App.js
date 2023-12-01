@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import SubmitButton from './components/SubmitButton';
 import FormGroup from './components/FormGroup';
 import Headers from './components/Headers';
+import Car from './components/Car';
 
 function App() {
   return (
@@ -10,6 +11,7 @@ function App() {
       <Headers/>
       <FormGroup/>
       <SubmitButton/>
+      <Car/>
     </div>
   );
 }

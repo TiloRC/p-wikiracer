@@ -86,7 +86,7 @@ input {
 	position: relative;
 	font-family:'Press Start 2P';
 }
-
+/* 
 .dot {
 	height: 1px;
 	width: 1px;
@@ -112,7 +112,7 @@ input {
 	100% {
 		transform: translateX(100vw);
 	}
-}
+} */
 
 .grid-container {
 	display: flex;
@@ -148,3 +148,72 @@ iframe {
 	margin-left: 50px;
 	margin-bottom: 30px;
 }
+
+img {
+	max-width: 70%;
+	height: auto;
+}
+
+.red {
+    border-radius: 50%;
+    display: inline-block;
+    bottom: 160px;
+    animation-delay: -5s;
+    transform: translateX(-100%);
+    animation-name: moveAcross;
+    animation-duration: 10s;
+    animation-iteration-count: infinite;
+}
+
+.blue {
+    border-radius: 50%;
+    display: inline-block;
+    bottom: 100px;
+    animation-delay: -10s;
+    transform: translateX(-100%);
+    animation-name: moveAcross;
+    animation-duration: 11s;
+    animation-iteration-count: infinite;
+}
+
+.green {
+    border-radius: 50%;
+    display: inline-block;
+    bottom: 40px;
+    animation-delay: -4s;
+    transform: translateX(-100%);
+    animation-name: moveAcross;
+    animation-duration: 10s;
+    animation-iteration-count: infinite;
+}
+
+.rcar {
+    position: absolute;
+    left: 15%;
+}
+
+.bcar {
+    position: absolute;
+    left: -3.5%;
+}
+
+.gcar {
+    position: absolute;
+    left: -21%;
+}
+
+@keyframes moveAcross {
+	0% {
+	  transform: translateX(-50vw);
+	}
+	60% {
+		transform: translateX(50vw);
+	}
+	40% {
+		transform: translateX(50vw);
+	}
+	100% {
+		transform: translateX(125vw);
+	}
+  }
+
