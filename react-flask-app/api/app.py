@@ -20,18 +20,13 @@ def api():
     
     searchTerm = request.args.get("textInput")
 
-    myResults = get_searches(searchTerm,5)
-
-
-    response = {'searchResult': myResults}
+    response = {'searchResult': get_searches(searchTerm,5)}
+    
     return jsonify(response)
 
 
 def get_searches(text, count):
-    # wiki = wikipediaapi.Wikipedia('en')
-    searches = wikipedia.search(text, results=count)
-    print(searches)
-    return searches
+    return wikipedia.search(text, results=count)
 
 def stringfy_path_list(path_list):
 
