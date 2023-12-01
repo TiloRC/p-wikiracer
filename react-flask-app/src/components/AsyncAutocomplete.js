@@ -80,7 +80,7 @@ export default function AsyncAutocomplete(props) {
           <li {...props}>
             <Grid container alignItems="center">
               <Grid item sx={{ width: 'calc(100% - 44px)', wordWrap: 'break-word' }}>
-                <li>{option}</li>
+                <div>{option}</div>
               </Grid>
             </Grid>
           </li>
