@@ -34,9 +34,9 @@ def evaluate_racer(racer: WikiRacer, games):
     for i in games:
         racers.append(racer)
 
-    with concurrent.futures.ThreadPoolExecutor(max_workers = 100) as executor:
+    with concurrent.futures.ThreadPoolExecutor(max_workers = 10) as executor:
         results = []
-        for result in executor.map(run_game, racers, games):
+        for result in executor.map(runGame, games):
             results.append(result)
 
     
@@ -45,6 +45,10 @@ def evaluate_racer(racer: WikiRacer, games):
     
     return functools.reduce(EvaluationResults.combineResults, results)
         
+def runGame(game):
+    racer = Greedy()
+    racer.set_max_path(10)
+    run_game(racer,game)
 
 def run_game(racer: WikiRacer, game):
     """
@@ -73,7 +77,7 @@ def generate_games(num_games):
     for i in range(num_games):
         nums.append(i)
 
-    with concurrent.futures.ThreadPoolExecutor(max_workers = 100) as executor:
+    with concurrent.futures.ThreadPoolExecutor(max_workers = 10) as executor:
         games = []
         for result in executor.map(generate_game_pair, nums) :
             games.append(result)
@@ -89,6 +93,6 @@ with open("algorithms/100games.txt", "r") as file:
 
 
 racer = Greedy()
-racer.set_max_path(10)
+racer.set_max_path(20)
 racerResults = evaluate_racer(racer, games)
 print(racerResults.failedGames, racerResults.path_lengths, racerResults.successfulGames)
