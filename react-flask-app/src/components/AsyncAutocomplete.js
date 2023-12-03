@@ -49,9 +49,14 @@ export default function AsyncAutocomplete(props) {
 
   }, [value, inputValue, fetch]);
 
+  const customStyle = {
+    fontFamily: 'Monospace',
+  };
+
   return (
     <Autocomplete
       id="async-autocomplete-1"
+      style={customStyle}
       sx={{ width: 300 }}
       getOptionLabel={(option) =>
         typeof option === 'string' ? option : option.description
@@ -80,7 +85,8 @@ export default function AsyncAutocomplete(props) {
           <li {...props}>
             <Grid container alignItems="center">
               <Grid item sx={{ width: 'calc(100% - 44px)', wordWrap: 'break-word' }}>
-                <div>{option}</div>
+              
+                <div style={{ fontFamily: 'Monospace'}}>{option}</div>
               </Grid>
             </Grid>
           </li>
