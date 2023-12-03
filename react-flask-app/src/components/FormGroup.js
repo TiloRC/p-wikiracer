@@ -10,26 +10,8 @@ function FormGroup() {
 
 
   function handleClick(startVal, endVal) {
-    // const requestOptions = {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({ inputtext: startVal,
-    //                           outputtext: endVal})
-    // };
-    // fetch('http://127.0.0.1:5000/api/alg', requestOptions)
-    //   .then(response => {
-    //     if (!response.ok) {
-    //       throw new Error('Network response was not ok');
-    //     }
-    //     const response_value = response.json();
-    //     response_value
-    //       .then((value) => {
-    //         console.log(value);
-    //         setpathstr(value);
-    //       })
-    //     console.log(response_value);
-    //   });
-    // }
+
+    setpathstr("Finding shortest path...");
 
     axios.get("http://127.0.0.1:5000/api/alg?startValue=" + startVal + "&endValue=" + endVal)
       .then(response => {

@@ -14,4 +14,4 @@ def interface(start, end):
     # returning path
     return wiki_path.find_path(start, end) 
 
-print(interface("KIPP Texas Public Schools", "Colorado River"))
+# print(interface("KIPP Texas Public Schools", "Colorado River"))

@@ -3,7 +3,7 @@ import time
 from flask_cors import CORS, cross_origin
 import wikipediaapi
 import wikipedia
-from algorithms import greedy_interface
+import greedy_interface
 
 
 
@@ -40,7 +40,7 @@ def apialg():
 
     print(path_list)
 
-    path_list = [startVal, "middle stuff", endVal]
+    # path_list = [startVal, "middle stuff", endVal]
 
     response = {'path': stringfy_path_list(path_list)}
 
@@ -63,6 +63,7 @@ def stringfy_path_list(path_list):
 
 if __name__ == '__main__':
     app.run(host = '0.0.0.0', port = 8080)
+
 
 
 

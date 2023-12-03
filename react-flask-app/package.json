@@ -27,7 +27,7 @@
   "scripts": {
     "start": "concurrently \"npm run start-react\" \"npm run start-flask\"",
     "start-react": "react-scripts start",
-    "start-flask": "cd api && flask run",
+    "start-flask": "cd api/algorithms && flask run",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
