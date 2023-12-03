@@ -2,6 +2,7 @@ from wikiracer import MaxPathLengthExceeded
 from helper import PageRequestError, PathDeadend
 from sentence_transformers import SentenceTransformer, util
 import wikipediaapi
+from stop_words import get_stop_words
 
 
 class Greedy():
@@ -45,6 +46,7 @@ class Greedy():
 
         if (wiki_start.exists() and wiki_dest.exists()):
             visited = [start_page] # list of visisted pages
+            print(visited)
             count = 0 # # page visit count
             current_wiki = wiki_start # tracks current wiki page
 
@@ -57,9 +59,10 @@ class Greedy():
                 links = self.get_linked_pages(current_wiki, visited)
 
                 # get link with highest cos sim and 'visit'
-                most_sim_page = self.get_most_similar(links, dest_page)
+                most_sim_page = self.get_blended_sim(links, dest_page)
                 visited.append(most_sim_page)
-
+                print(visited)
+                
                 # path completed
                 if most_sim_page == dest_page:
                     return visited
@@ -77,7 +80,12 @@ class Greedy():
         # dest doesn't exist
         else:
             raise PageRequestError("Destination page does not exist as a wikipedia title")
+    
+    def assign_alpha(self, value = 0.5):
+        return value
 
+    def assign_beta(self, value = 3):
+        return value
 
     def get_linked_pages(self, page, visited):
         """
@@ -118,12 +126,81 @@ class Greedy():
             wiki_page = self.wiki_access.page(sorted_links[0])
             
         return sorted_links[0]
+    
+
+    def get_blended_sim(self, links, target_page):
+        """
+        returns the page with the highest blended similarity value to the target page. 
+        blended_sim = (1-α)cos_sim ** beta  + αgen
+        gen = Avg(1/word_rank)
+
+        1) Make a function for alpha
+        2) Remove stop words from title
+        3) Adding the exponent to cosine similarity (cube it)
+
+        """
+        #  open file and encode target
+        file_in = open("wordrankings.txt", "r")
+        encoded_target = self.model.encode(target_page)
+
+        # list of lines in (-1 + rank) asc. order
+        ranked_lines = file_in.readlines()
+
+        # stripping \n
+        ranked_lines = [line.rstrip("\n") for line in ranked_lines]
+
+        link_freqs = [] # list of tuples (link, avg freq)
+
+        # print(get_stop_words('english'))
+        
+        for link in links:  
+            # list of a freq's for each token in a link title
+
+            trimmed_link = [token for token in link.split() if token not in get_stop_words('english')]
+        
+            freqs = [(1/(1 + ranked_lines.index(token)) if token in ranked_lines else 0) for token in trimmed_link]
+            link_freqs.append((link, sum(freqs)/len(freqs)))
+
+
+        # freq scaling factor
+        alpha = self.assign_alpha()
+        beta = self.assign_beta()
+
+        # sort by highest blended
+        blend_sorted = sorted(link_freqs,key = lambda tple: (1 - alpha) * ((util.cos_sim(self.model.encode(tple[0]), encoded_target)[0][0].item()) ** beta) + alpha * tple[1], reverse=True)
+        
+
+        # removing blended
+        sorted_links = [tple[0] for tple in blend_sorted]
+
+        if not sorted_links:
+            raise PathDeadend
+        
+        if target_page in sorted_links:
+            return target_page
+        
+        else:
+            wiki_page = self.wiki_access.page(sorted_links[0])
+
+        
+            while not wiki_page.exists(): 
+                # checking to see if list exists
+                if not sorted_links:
+                    raise PathDeadend
+
+                # pop out pages that don't exist
+                sorted_links.pop(0)
+                wiki_page = self.wiki_access.page(sorted_links[0])
+            
+      
+            return sorted_links[0]
+
 
 
 if __name__ == "__main__":
     tester_1 = Greedy()
-    print(tester_1.find_path("Pomona College", "Albert Einstein"))
-
+    print(tester_1.find_path("KIPP Texas Public Schools", "Colorado River"))
+    print("finished")
 
 
 

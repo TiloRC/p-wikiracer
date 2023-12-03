@@ -11,7 +11,7 @@ from typing import List
 from sentence_transformers import SentenceTransformer, util
 
 # Download model
-model = SentenceTransformer('paraphrase-MiniLM-L6-v2')
+model = SentenceTransformer('paraphrase-MiniLM-L6-v2')  
 
 class FailedPath(Exception):
     """
