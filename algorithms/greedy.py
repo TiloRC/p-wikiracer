@@ -3,7 +3,10 @@ from helper import PageRequestError, PathDeadend
 from sentence_transformers import SentenceTransformer, util
 import wikipediaapi
 from stop_words import get_stop_words
+from pyinstrument import Profiler 
 
+profiler = Profiler()
+profiler.start()
 
 class Greedy():
     def __init__(self):
@@ -16,7 +19,8 @@ class Greedy():
             some measure of their similarity.
         """
         self.max_path_length = 18 
-        self.model = SentenceTransformer('paraphrase-MiniLM-L6-v2')
+        # self.model = SentenceTransformer('paraphrase-MiniLM-L6-v2')
+        self.model = SentenceTransformer('average_word_embeddings_glove.6B.300d')
         self.wiki_access = wikipediaapi.Wikipedia('Aldo & Richard', 'en')
 
 
@@ -59,7 +63,7 @@ class Greedy():
                 links = self.get_linked_pages(current_wiki, visited)
 
                 # get link with highest cos sim and 'visit'
-                most_sim_page = self.get_blended_sim(links, dest_page)
+                most_sim_page = self.get_most_similar(links, dest_page)
                 visited.append(most_sim_page)
                 print(visited)
                 
@@ -165,7 +169,7 @@ class Greedy():
         # freq scaling factor
         alpha = self.assign_alpha()
         beta = self.assign_beta()
-
+        
         # sort by highest blended
         blend_sorted = sorted(link_freqs,key = lambda tple: (1 - alpha) * ((util.cos_sim(self.model.encode(tple[0]), encoded_target)[0][0].item()) ** beta) + alpha * tple[1], reverse=True)
         
@@ -198,9 +202,18 @@ class Greedy():
 
 
 if __name__ == "__main__":
+
+
+
     tester_1 = Greedy()
-    print(tester_1.find_path("KIPP Texas Public Schools", "Colorado River"))
+    # print(tester_1.find_path("Pomona College", "Albert Einstein"))
+    print(tester_1.find_path("Apple pie", "Pomona College"))
     print("finished")
+
+
+
+profiler.stop()
+profiler.print()
 
 
 
