@@ -4,6 +4,7 @@ from sentence_transformers import SentenceTransformer, util
 import wikipediaapi
 from stop_words import get_stop_words
 from pyinstrument import Profiler 
+import json
 
 profiler = Profiler()
 profiler.start()
@@ -47,6 +48,7 @@ class Greedy():
         self.wiki_access = wikipediaapi.Wikipedia('Aldo & Richard', 'en')
         wiki_start = self.wiki_access.page(start_page) # wiki page for start 
         wiki_dest = self.wiki_access.page(dest_page) # wiki page for dest
+        dest_page_vector = self.model.encode(dest_page)
 
         if (wiki_start.exists() and wiki_dest.exists()):
             visited = [start_page] # list of visisted pages
@@ -56,14 +58,14 @@ class Greedy():
 
             while count < self.max_path_length:
                 # exception for dead pages
-                if not current_wiki.exists:
-                    raise PathDeadend
+                # if not current_wiki.exists:
+                #     raise PathDeadend
                 
                 # get Linked Pages - we will only once per title
                 links = self.get_linked_pages(current_wiki, visited)
 
                 # get link with highest cos sim and 'visit'
-                most_sim_page = self.get_most_similar(links, dest_page)
+                most_sim_page = self.get_blended_sim(links, dest_page_vector)
                 visited.append(most_sim_page)
                 print(visited)
                 
@@ -100,7 +102,6 @@ class Greedy():
         linked_pages = []
         for title in links.keys():
             if title not in visited: 
-                # print(type(title))
                 linked_pages.append(title)
 
         return linked_pages
@@ -111,10 +112,13 @@ class Greedy():
         returns the t
         """
         # encoding target page
-        encoded_target = self.model.encode(target_page)
 
-        # sorting links by cosine similarity
-        sorted_links = sorted(links,key = lambda title: util.cos_sim(self.model.encode(title), encoded_target)[0][0].item(), reverse=True)
+        link_ids = range(len(links))
+
+        encoded_links = self.model.encode(links)
+
+        sorted_links = sorted(link_ids,key = lambda title_id: util.cos_sim(encoded_links[title_id], target_page)[0][0].item(), reverse=True)
+        sorted_links = [links[link_id] for link_id in sorted_links]
         
         # checking if page w/ highest cos sim exists
         wiki_page = self.wiki_access.page(sorted_links[0])
@@ -127,9 +131,42 @@ class Greedy():
             
             # pop out pages that don't exist
             sorted_links.pop(0)
+
             wiki_page = self.wiki_access.page(sorted_links[0])
             
         return sorted_links[0]
+    
+
+    def binary_search(self, arr, x):
+        low = 0
+        high = len(arr) - 1
+        mid = 0
+    
+        while low <= high:
+    
+            mid = (high + low) // 2
+    
+            # If x is greater, ignore left half
+            if arr[mid] < x:
+                low = mid + 1
+    
+            # If x is smaller, ignore right half
+            elif arr[mid] > x:
+                high = mid - 1
+    
+            # means x is present at mid
+            else:
+                return mid
+    
+        # If we reach here, then the element was not present
+        return -1
+
+
+    def avg_freq(self, rankings, tokens):
+
+        freqs = [(1/(1 + self.binary_search(rankings, token)) if token not in get_stop_words('english') and self.binary_search(rankings, token) != -1 else 0) for token in tokens]
+
+        return sum(freqs)/len(freqs)
     
 
     def get_blended_sim(self, links, target_page):
@@ -144,61 +181,63 @@ class Greedy():
 
         """
         #  open file and encode target
-        file_in = open("wordrankings.txt", "r")
-        encoded_target = self.model.encode(target_page)
+        in_file = open("wordrankings.txt", "r")
+
 
         # list of lines in (-1 + rank) asc. order
-        ranked_lines = file_in.readlines()
 
         # stripping \n
-        ranked_lines = [line.rstrip("\n") for line in ranked_lines]
+        ranked_lines = [line.rstrip("\n") for line in in_file.readlines()]
 
-        link_freqs = [] # list of tuples (link, avg freq)
+        in_file.close()
+        print("here?")
+        # link_freqs = [] # list of tuples (link, avg freq)
 
         # print(get_stop_words('english'))
         
-        for link in links:  
-            # list of a freq's for each token in a link title
+        # for link in links:  
+        #     # list of a freq's for each token in a link title
 
-            trimmed_link = [token for token in link.split() if token not in get_stop_words('english')]
+        #     trimmed_link = [token for token in link.split() if token not in get_stop_words('english')]
         
-            freqs = [(1/(1 + ranked_lines.index(token)) if token in ranked_lines else 0) for token in trimmed_link]
-            link_freqs.append((link, sum(freqs)/len(freqs)))
+        #     freqs = [(1/(1 + ranked_lines.index(token)) if token in ranked_lines else 0) for token in trimmed_link]
+        #     link_freqs.append((link, sum(freqs)/len(freqs)))
 
 
         # freq scaling factor
         alpha = self.assign_alpha()
         beta = self.assign_beta()
-        
+
+        print("here2")
+        link_ids = range(len(links))
+        encoded_links = self.model.encode(links)
+
+
+        sorted_links = sorted(link_ids, key = lambda title_id: (1 - alpha) * ((util.cos_sim(encoded_links[title_id], target_page)[0][0].item()) ** beta) 
+                              + (alpha * self.avg_freq(ranked_lines, links[title_id].split())), reverse=True)
+        print("here$$")
+        sorted_links = [links[link_id] for link_id in sorted_links]
+
+
+
         # sort by highest blended
-        blend_sorted = sorted(link_freqs,key = lambda tple: (1 - alpha) * ((util.cos_sim(self.model.encode(tple[0]), encoded_target)[0][0].item()) ** beta) + alpha * tple[1], reverse=True)
+        # blend_sorted = sorted(link_freqs,key = lambda tple: (1 - alpha) * ((util.cos_sim(self.model.encode(tple[0]), target_page)[0][0].item()) ** beta) + alpha * tple[1], reverse=True)
         
 
-        # removing blended
-        sorted_links = [tple[0] for tple in blend_sorted]
+        wiki_page = self.wiki_access.page(sorted_links[0])
 
-        if not sorted_links:
-            raise PathDeadend
-        
-        if target_page in sorted_links:
-            return target_page
-        
-        else:
-            wiki_page = self.wiki_access.page(sorted_links[0])
-
-        
-            while not wiki_page.exists(): 
-                # checking to see if list exists
-                if not sorted_links:
-                    raise PathDeadend
-
-                # pop out pages that don't exist
-                sorted_links.pop(0)
-                wiki_page = self.wiki_access.page(sorted_links[0])
+        print("here4")
+        while not wiki_page.exists(): 
+            # checking to see if list exists
+            if not sorted_links:
+                raise PathDeadend
             
-      
-            return sorted_links[0]
-
+            # pop out pages that don't exist
+            sorted_links.pop(0)
+            print("here5")
+            wiki_page = self.wiki_access.page(sorted_links[0])
+            
+        return sorted_links[0]
 
 
 if __name__ == "__main__":

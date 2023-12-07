@@ -1,5 +1,6 @@
 from greedy import Greedy
-import threading
+import concurrent.futures 
+import json
 
 def interface(start, end):
     """
@@ -18,21 +19,22 @@ def interface(start, end):
 
 
 
-
-def greedyThread(func, args):
-    threads = []
-    for page in args:
-        threads.append(threading.Thread(func, page[0], page[1]))
-
-    for thread in threads:
-        thread.start()
-
-    for thread in threads:
-        thread.join()
-
-    print("done")
+def thread(starts, ends):
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        results = list(executor.map(interface, starts, ends))
+    return results
 
 
+with open("100games.txt", "r") as file:
+    games = json.loads(file.read())
+    
+print(games)
 
-pages = [("KIPP Texas Public Schools", "Colorado River") , ("Pomona College", "Apple pie"), ("Apple pie", "Pomona College"), ("Pomona College, Albert Einstein"), ("Culver City, California", "Fifty Shades of Grey (film)")]
-greedyThread(interface, pages)
+pages = [("KIPP Texas Public Schools", "Colorado River") , ("Pomona College", "Apple pie"), ("Apple pie", "Pomona College"), ("Pomona College", "Albert Einstein"), ("Culver City, California", "Fifty Shades of Grey (film)")]
+# starts = [page[0] for page in games]
+# ends = [page[1] for page in games]
+
+# print("\nRESULTS")
+# results = thread(starts, ends)
+# for result in results:
+#     print(result)
